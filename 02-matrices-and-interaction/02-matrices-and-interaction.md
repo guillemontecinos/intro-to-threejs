@@ -242,7 +242,7 @@ function updateCubeTransform() {
 }
 ```
 <p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%260\\0%261%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20A=\left[\begin{array}{cccc}1%260%260%260\\0%261%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
 </p>
 
 #### The `Rotation` matrix
@@ -263,7 +263,7 @@ const rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(rotationQu
 Based on the [formula](https://en.wikipedia.org/wiki/Rotation_matrix), the Rotation matrix around `z-axis` looks like follow.
 
 <p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R_Z(\theta)=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R_z(\theta)=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
 </p>
 
 Then let's apply the rotation to the Transformation matrix, which is done by right–multiplying `T` by `R`. Now, since we previously defined `T` as an `Identity 4 x 4` matrix the result of the multiplication is equals to `R`.
@@ -274,7 +274,7 @@ transformMatrix.multiply(rotationMatrix)
 ```
 
 <p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T'=TR_Z(\theta)=R_Z(\theta)">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20A'=AR_z(\theta)=R_z(\theta)">
 </p>
 
 #### The `Translation` matrix
@@ -315,6 +315,10 @@ pos.z = 0
 // Update the cube's matrix to that vector only if the vector is inside the plane guard.
 if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
 ```
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20L=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
+</p>
 
 
 ```js
