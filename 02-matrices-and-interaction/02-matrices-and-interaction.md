@@ -254,7 +254,7 @@ Let's use the second method. First of all, let's make a quaternion from a rotati
 
 
 <p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R=\left[\begin{array}{cccc}1%260%260%260\\0%261%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R=\left[\begin{array}{cccc}1%260%260%260\\0%26\cos\theta%26\-sin\theta%260\\0%26\sin\theta%26\cos\theta%261\\0%260%260%261\end{array}\right]">
 </p>
 
 ```js
