@@ -252,25 +252,30 @@ Let's create then a [`Rotation`](https://en.wikipedia.org/wiki/Rotation_matrix) 
 
 Let's use the second method. First of all, let's make a quaternion from a rotation around the `z-axis` by calling [`new THREE.Quaternion().setFromAxisAngle(axis, angle)`](https://threejs.org/docs/index.html#api/en/math/Quaternion.setFromAxisAngle), where `axis = new THREE.Vector3(0, 0, 1)` and `angle = boxZRotSpeed`. Then, let's make the `Rotation` matrix from the quaterinion by calling [`new THREE.Matrix4().makeRotationFromQuaternion(rotationQuat)`](https://threejs.org/docs/index.html#api/en/math/Matrix4.makeRotationFromQuaternion).
 
-
-<p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R_Z(\theta)=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
-</p>
-
-<p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T'=TR_Z(\theta)=R_Z(\theta)">
-</p>
-
 ```js
 // Rotation
 // Declare a quaternion from an axis rotation around z (because in our system z is pointing up)
 const rotationQuat = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), boxZRotSpeed)
 // Declare a 4x4 matrix from the quaternion that represents rotation
 const rotationMatrix = new THREE.Matrix4().makeRotationFromQuaternion(rotationQuat)
+```
+
+Based on the [formula](https://en.wikipedia.org/wiki/Rotation_matrix), the Rotation matrix around `z-axis` looks like follow.
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20R_Z(\theta)=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
+</p>
+
+Then let's apply the rotation to the Transformation matrix, which is done by right–multiplying `T` by `R`. Now, since we previously defined `T` as an `Identity 4 x 4` matrix the result of the multiplication is equals to `R`.
+
+```js
 // Apply rotation by multiplying transformMatrix by rotationMatrix
 transformMatrix.multiply(rotationMatrix)
-
 ```
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T'=TR_Z(\theta)=R_Z(\theta)">
+</p>
 
 #### The `Translation` matrix
 
