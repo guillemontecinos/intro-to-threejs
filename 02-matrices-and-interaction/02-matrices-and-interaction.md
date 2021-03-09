@@ -285,16 +285,18 @@ const translateSpeed = .04
 ```
 
 Then, inside the `updateCubeTransform()` function let's evaluate whether the variables `moveFront` and `moveBack` are being pressed or not. 
-If both keys are being pressed at the same time we want the cube not to move, but if only `moveFront = true`, we want to set `moveDirection = 1` and if it's moving back, we want to set `moveDirection = -1'.
+If both keys are being pressed at the same time we want the cube not to move, but if only `moveFront = true`, we want to set `moveDirection = 1` and if it's moving back, we want to set `moveDirection = -1`.
 
 ```js
 // Position
 let moveDirection = 0
-if(moveFront) {
-    moveDirection = 1
-}
-if(moveBack) {
-    moveDirection = -1
+if(!(moveFront && moveBack)) {
+    if(moveFront) {
+        moveDirection = 1
+    }
+    else if(moveBack) {
+        moveDirection = -1
+    }
 }
 ```
 
