@@ -266,7 +266,7 @@ Based on the [formula](https://en.wikipedia.org/wiki/Rotation_matrix), the Rotat
     <img src="https://render.githubusercontent.com/render/math?math=\Large%20R_z(\theta)=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
 </p>
 
-Then let's apply the rotation to the Transformation matrix, which is done by right–multiplying `T` by `R`. Now, since we previously defined `T` as an `Identity 4 x 4` matrix the result of the multiplication is equals to `R`.
+Then let's apply the rotation to the Transformation matrix, which is done by right–multiplying `A` by `R`. Now, since we previously defined `A` as an `Identity 4 x 4` matrix the result of the multiplication is equals to `R`.
 
 ```js
 // Apply rotation by multiplying transformMatrix by rotationMatrix
@@ -278,14 +278,15 @@ transformMatrix.multiply(rotationMatrix)
 </p>
 
 #### The `Translation` matrix
+Finally, let's implement the translation transformation the enables our cube to move in the space. To do that, we have to define at what speed we want the cube to move when any of the keys is pressed. By speed we mean how many units per frame we want it to be translated.
 
-```js
-// Scenario Guard
-const planeGuard = new THREE.Box3().setFromObject(planeMesh)
-```
 ```js
 const translateSpeed = .04
 ```
+
+Then, inside the `updateCubeTransform()` function let's evaluate whether the variables `moveFront` and `moveBack` are being pressed or not. 
+If both keys are being pressed at the same time we want the cube not to move, but if only `moveFront = true`, we want to set `moveDirection = 1` and if it's moving back, we want to set `moveDirection = -1'.
+
 ```js
 // Position
 let moveDirection = 0
@@ -295,6 +296,13 @@ if(moveFront) {
 if(moveBack) {
     moveDirection = -1
 }
+```
+
+```js
+// Scenario Guard
+const planeGuard = new THREE.Box3().setFromObject(planeMesh)
+```
+```js
 // Since the rotation has been previously applied to the transformMatrix, the mesh's "front" has rotated. Then, applying translating the cube in the y-direction means it will move in the y-direction of the already rotated cube's coordinate system.
 const cubeLookAtCopy = new THREE.Vector3().copy(cubeLookAt)
 // Calculate a vector that represents the translation in terms of direction and magnitude
@@ -317,7 +325,7 @@ if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
 ```
 
 <p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20L=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
 </p>
 
 

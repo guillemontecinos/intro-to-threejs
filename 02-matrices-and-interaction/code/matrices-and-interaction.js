@@ -119,11 +119,13 @@ function updateCubeTransform() {
 
         // Position
         let moveDirection = 0
-        if(moveFront) {
-            moveDirection = 1
-        }
-        if(moveBack) {
-            moveDirection = -1
+        if(!(moveFront && moveBack)) {
+            if(moveFront) {
+                moveDirection = 1
+            }
+            else if(moveBack) {
+                moveDirection = -1
+            }
         }
         // Since the rotation has been previously applied to the transformMatrix, the mesh's "front" has rotated. Then, applying translating the cube in the y-direction means it will move in the y-direction of the already rotated cube's coordinate system.
         const cubeLookAtCopy = new THREE.Vector3().copy(cubeLookAt)
