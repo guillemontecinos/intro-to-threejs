@@ -306,7 +306,7 @@ Now, we need to define where is the cube moving to. For this purpose, it is usef
 const cubeLookAt = new THREE.Vector3(0, 1, 0)
 ```
 
-Inside the `updateCubeTransform()` function let's make a copy of that vector called `cubeLookAtCopy` and multiply it by the scalar product between `translateSpeed` and `moveDirection`, which will indicate what's the translation direction and scale. Then, let's create a `Translation` matrix from that vector calling the method `new THREE.Matrix4().makeTranslation(tx, ty, tz)`.
+Inside the `updateCubeTransform()` function let's make a copy of that vector called `cubeLookAtCopy` and multiply it by the scalar product between `translateSpeed` and `moveDirection`, which will indicate what's the translation direction and scale. Then, let's create a [`Translation` matrix](https://en.wikipedia.org/wiki/Translation_(geometry)) from that vector calling the method `new THREE.Matrix4().makeTranslation(tx, ty, tz)`.
 
 ```js
 // Since the rotation has been previously applied to the transformMatrix, the mesh's "front" has rotated. Then, applying translating the cube in the y-direction means it will move in the y-direction of the already rotated cube's coordinate system.
@@ -320,8 +320,6 @@ const translationMatrix = new THREE.Matrix4().makeTranslation(cubeLookAtCopy.x, 
 <p align="center">
     <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
 </p>
-
-This matrix, according to [this documentation](https://en.wikipedia.org/wiki/Translation_(geometry)) should look like the following.
 
 ```js
 // Apply translation to the transformMatrix
