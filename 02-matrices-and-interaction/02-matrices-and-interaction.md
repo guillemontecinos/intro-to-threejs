@@ -321,10 +321,21 @@ const translationMatrix = new THREE.Matrix4().makeTranslation(cubeLookAtCopy.x, 
     <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
 </p>
 
+Let's then apply the translation to the transformation matrix by right-multiplying it.
+
 ```js
 // Apply translation to the transformMatrix
 transformMatrix.multiply(translationMatrix)
 ```
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20A'=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%260\\sin\theta%26cos\theta%260%260\\0%260%261%260\\0%260%260%261\end{array}\right]">
+</p>
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
+</p>
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20A''=A'T=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%26t_xcos\theta-t_ysin\theta\\sin\theta%26cos\theta%260%26t_xsin\theta%2Bt_ycos\theta\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
+</p>
 
 ```js
 // Scenario Guard
