@@ -300,10 +300,15 @@ if(!(moveFront && moveBack)) {
 }
 ```
 
+Now, we need to define where is the cube moving to. For this purpose, it is useful to have a `cubeLookAt` vector that points in the forward direction, which in this case is in the positive direction of the cube's system `y-axis`. Then, let's declare this vector in the section where the cube is being declared.
+
 ```js
-// Scenario Guard
-const planeGuard = new THREE.Box3().setFromObject(planeMesh)
+const cubeLookAt = new THREE.Vector3(0, 1, 0)
 ```
+
+Inside the `updateCubeTransform()` function let's make a copy of that vector called `cubeLookAtCopy` and multiply it by the scalar product between `translateSpeed` and `moveDirection`, which will indicate what's the translation direction and scale. Then, let's create a `Translation` matrix from that vector calling the method `new THREE.Matrix4().makeTranslation(tx, ty, tz)`.
+
+
 ```js
 // Since the rotation has been previously applied to the transformMatrix, the mesh's "front" has rotated. Then, applying translating the cube in the y-direction means it will move in the y-direction of the already rotated cube's coordinate system.
 const cubeLookAtCopy = new THREE.Vector3().copy(cubeLookAt)
@@ -311,9 +316,22 @@ const cubeLookAtCopy = new THREE.Vector3().copy(cubeLookAt)
 cubeLookAtCopy.multiplyScalar(translateSpeed * moveDirection)
 // Decalre a translation matrix from the above vector
 const translationMatrix = new THREE.Matrix4().makeTranslation(cubeLookAtCopy.x, cubeLookAtCopy.y, cubeLookAtCopy.z)
+```
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
+</p>
+
+```js
 // Apply translation to the transformMatrix
 transformMatrix.multiply(translationMatrix)
+```
 
+```js
+// Scenario Guard
+const planeGuard = new THREE.Box3().setFromObject(planeMesh)
+```
+```js
 // Test if inside the guard
 // Create an auxiliary matrix to estimate the next position after the transform is applied
 const nextTransformMatrix = new THREE.Matrix4().copy(cubeMesh.matrix)
@@ -325,10 +343,6 @@ pos.z = 0
 // Update the cube's matrix to that vector only if the vector is inside the plane guard.
 if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
 ```
-
-<p align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\Large%20T=\left[\begin{array}{cccc}1%260%260%26t_x\\0%261%260%26t_y\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
-</p>
 
 
 ```js
