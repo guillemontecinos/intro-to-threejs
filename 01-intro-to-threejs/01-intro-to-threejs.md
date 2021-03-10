@@ -280,3 +280,14 @@ mtlLoader.load(materialPath, (preMaterial) => {
 <p align="center">
   <img src="./assets/bike-final-load.png" align="middle" width="60%">
 </p>
+
+## Appendix: Running a local server
+### Mac
+* Python 2
+```batch
+pthon -m SimpleHTTPServer port
+```
+* Python 3
+```batch
+python -m http.server port
+```
