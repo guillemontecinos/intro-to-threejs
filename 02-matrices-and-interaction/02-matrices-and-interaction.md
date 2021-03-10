@@ -349,10 +349,6 @@ Finally, let's apply the transformation to the cube's matrix in order to update 
 cubeMesh.matrix.multiply(transformMatrix)
 ```
 
-```js
-// Scenario Guard
-const planeGuard = new THREE.Box3().setFromObject(planeMesh)
-```
 #### Rendering the new matrix
 In order to see how the transformation applied to the matrix affects the position of the cube in the 3D world, we need to refresh the canvas. We do this by implementing the function `renderFrame()` (as we did in the tutorial [01 – Intro to Three.js – From nothing to importing an .obj model](https://github.com/guillemontecinos/itp-residency-2020-2021/blob/master/three-js/tutorials/01-intro-to-threejs/intro-to-threejs.md)), inside which we update the cube's position by calling `updateCubeTransform()`.
 
@@ -384,8 +380,11 @@ function resizeRendererToDisplaySize(renderer){
     return needsResize
 }
 ```
-#### Defining scene's boundaries
-
+#### Defining the scene's boundaries
+```js
+// Scenario Guard
+const planeGuard = new THREE.Box3().setFromObject(planeMesh)
+```
 ```js
 // Test if inside the guard
 // Create an auxiliary matrix to estimate the next position after the transform is applied
