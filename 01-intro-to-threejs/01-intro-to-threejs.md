@@ -9,9 +9,10 @@ This tutorial is highly inspired on –not to say it's nearly a remix of– [Thr
 
 ## Index
 * [The Three.js structure](#the-threejs-structure)
-* Hello world – Displaying a 3D Cube
-    * Creating a camera
-    * Rendering a Basic Cube
+* [Hello world – Displaying a 3D Cube](#hello-world--displaying-a-3d-cube)
+    * [Creating a camera](#creating-a-camera)
+    * [Rendering a Basic Cube](#rendering-a-basic-cube)
+    * [Animating the Cube](#animating-the-cube)
 
 ## The Three.js structure
 Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `objects`, `lights`, `meshes`, `materials`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
@@ -98,7 +99,7 @@ renderer.render(scene, camera)
   <img src="./assets/static-cube.png" align="middle" width="60%">
 </p>
 
-## Animating the Cube
+### Animating the Cube
 Now that we have a plain, boring cube being rendered on the canvas, let's animate it. To do that we have to include the temporal dimension somewhere in our program, so we can perform changes to any of the cube's atrributes based on time.
 
 We can do that using the DOM's function [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame), a method of the `window` interface that tells the browser to update its content before the next repaint. It takes a callback function which performs the animation update, and passes it the current time measured in milliseconds since the moment the program started. The animation relies on the callback to recursively call `requestAnimationFrame` in order to keep the window content updated, and has to be triggered by calling `requestAnimationFrame` once.
