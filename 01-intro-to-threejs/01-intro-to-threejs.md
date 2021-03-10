@@ -283,8 +283,13 @@ mtlLoader.load(materialPath, (preMaterial) => {
 </p>
 
 ## Appendix: Running a local server
-### Mac
-Open your terminal, go to the folder where your root file is located, in general this file is called `index.html`, and run the following commands:
+Either in Windows and Mac you can run an HTTP local server using Python. If you are using windows check if Python is installed writing the following command in your shell:
+
+```
+python -V
+```
+
+Then your terminal, go to the folder where your root file is located, in general this file is called `index.html`, and run the following commands:
 * Python 2
 ```
 $ python -m SimpleHTTPServer port
