@@ -22,7 +22,7 @@ const far = 50
 const camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
 // camera.position.set(0, 0, 2)
 // For obj model
-camera.position.set(12, 12, 5)
+camera.position.set(12, 0, 0)
 
 // Creating scene, which is the root of the project
 const scene = new THREE.Scene()
@@ -51,9 +51,9 @@ scene.add(hemisphereLight)
 
 // // Orbit controls
 const controls = new OrbitControls(camera, canvas);
-// controls.target.set(0, 0, 0);
+controls.target.set(0, 0, 0);
 // For obj model loading
-controls.target.set(0, 5, 0);
+// controls.target.set(0, 5, 0);
 controls.update();
 
 // Load model material
@@ -62,10 +62,11 @@ const mtlLoader = new MTLLoader()
 mtlLoader.load(materialPath, (preMaterial) => {
     const material = MtlObjBridge.addMaterialsFromMtlLoader(preMaterial)
     // Load OBJ model
-    const modelPath = './roadbike.1.0.obj'
+    const modelPath = './roadbike.1.0.centered.obj'
     const objLoader = new OBJLoader2()
     objLoader.addMaterials(material)
     objLoader.load(modelPath, (model) => {
+        model.position.set(0, -2, 0)
         scene.add(model)
     })
 })

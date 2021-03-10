@@ -20,7 +20,7 @@ This tutorial is highly inspired on –not to say it's nearly a remix of– [Thr
 * [Appendix: Running a local server](#appendix-running-a-local-server)
 
 ## The Three.js structure
-Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `objects`, `lights`, `meshes`, `materials`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
+Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `lights`, `meshes`, `materials`, `geometries`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
 
 In order to be able to see a `scene` and all the elements on it, we need a `camera` that captures and represents them as a 2D image, and a `renderer` that takes both the physical info from the scene and the graphic info from the camera and renders it on an HTML canvas (yeah, the same canvas on top of which p5.js works).
 
@@ -58,7 +58,7 @@ Note that we declared `canvas` as a `const`. We will do this as much as possible
 const renderer = new THREE.WebGLRenderer({canvas})
 ```
 ### Creating a camera
-Since we already declared our `renderer`, we need two more elements to have the 3D world rendered on the canvas: a `scene` and a `camera`, let's start with cameras. In the 3D graphics world there are two main types of cameras: perspective and orthographic cameras. Perspective cameras simulate the behave of the human eye by replicating the perspective of a set of elements in the space, which means farther elements look smaller than closer elements. On the other hand, orthographic cameras use orthographic projection, also known as parallel projeciton. This means elements keep their size on the camera, even if they are at different distances from it.
+Since we already declared our `renderer`, we need two more elements to have the 3D world rendered on the canvas: a `scene` and a `camera`, let's start with cameras. In the 3D graphics world there are two main types of cameras: **perspective** and **orthographic** cameras. Perspective cameras simulate the behave of the human eye by replicating the perspective of a set of elements in the space, which means farther elements look smaller than closer elements. On the other hand, orthographic cameras use orthographic projection, also known as parallel projeciton. This means elements keep their size on the camera, even if they are at different distances from it.
 
 In our case, we will use three.js' [`PerspectiveCamera`](https://threejs.org/docs/index.html#api/en/cameras/PerspectiveCamera), which takes four elements on its constructor: `fov` which represent the vertical [field of view](https://en.wikipedia.org/wiki/Field_of_view_in_video_games) (measured in degrees), `aspect` which respresents the aspect ratio of the camera, `near` which represents the distance between the camera and the near plane, and `far` which represents the distance between the camera and the farther plane. These 4 elements conform what is known as the camera frustrum or [viewing frustrum](https://en.wikipedia.org/wiki/Viewing_frustum).
 
@@ -80,6 +80,7 @@ This means, the field of view is 60º, the aspect ratio is `2:1`, the nearest pl
 
 ```js
 const scene = new THREE.Scene()
+scene.add(camera)
 ```
 
 ### Rendering a Basic Cube
@@ -190,12 +191,18 @@ Let's now add an orbit controller to the scene which will allow us to move the c
 ```js
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/controls/OrbitControls.js'
 ```
-Then, let's declare an instance of the orbit control by calling the constructor function `OrbitControl` that takes both the camera and canvas as arguments. Subsequently, let's set the controller target point as the scene's origin and call `controls.update()`. It is also recommended to comment the line that updates the box's rotation, in order to have only one element moving in the scene (in this case the camera).
+Then, let's declare an instance of the orbit control by calling the constructor function `OrbitControl` that takes both the camera and canvas as arguments. 
 
-```js
+<!-- Subsequently, let's set the controller target point as the scene's origin and call `controls.update()`. It is also recommended to comment the line that updates the box's rotation, in order to have only one element moving in the scene (in this case the camera). -->
+
+<!-- ```js
 const controls = new OrbitControls(camera, canvas);
 controls.target.set(0, 0, 0);
 controls.update();
+``` -->
+
+```js
+const controls = new OrbitControls(camera, canvas);
 ```
 
 <p align="center">
@@ -232,15 +239,14 @@ objLoader.load(modelPath, (model) => {
   <img src="./assets/bike-first-load.png" align="middle" width="60%">
 </p>
 
-As you may have noticed we have successfully loadded a 3D model to our scene, but the model has no materials and the camera is not properly placed in the world in order to let us appreciate our 3D bike. Then, let's make a couple changes as setting the camera's `far` parameter, resetting the camera's position and the controls target.
+As you may have noticed we have successfully loadded a 3D model to our scene, but the model has no materials and the camera is not properly placed in the world in order to let us appreciate our 3D bike. Then, let's reset the camera's `far` parameter and position.
 
 ```js
 const far = 50
-camera.position.set(12, 12, 5)
-controls.target.set(0, 5, 0);
+camera.position.set(12, 0, 0)
 ```
 
-Now we can properly see our pretty but with no materials bike.
+Now we can properly see our gorgeous but with no materials bike.
 
 <p align="center">
   <img src="./assets/bike-second-load.png" align="middle" width="60%">
