@@ -7,6 +7,12 @@ In the following tutorial we will learn how to set up a basic three.js scene, wi
 
 This tutorial is highly inspired on –not to say it's nearly a remix of– [Three.js Fundamentals](https://threejsfundamentals.org/) tutorial series by [https://gfxfundamentals.org/](https://gfxfundamentals.org/), and was written as part of my Residency at NYU ITP, 2020 – 2021.
 
+## Index
+* [The Three.js structure](#the-threejs-structure)
+* Hello world – Displaying a 3D Cube
+    * Creating a camera
+    * Rendering a Basic Cube
+
 ## The Three.js structure
 Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `objects`, `lights`, `meshes`, `materials`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
 
@@ -70,7 +76,7 @@ This means, the field of view is 60º, the aspect ratio is `2:1`, the nearest pl
 const scene = new THREE.Scene()
 ```
 
-### Basic Cube
+### Rendering a Basic Cube
 As we mentioned earlier, in three.js physical objects are represented by a `mesh`, which is composed by a `geometry` and a `material`. Geometries are –in simple– collections of data organized in arrays that represent different parameters of a 3D object: the `position` of the vertices that define the mesh's structure, the `normal` vectors to the faces delimited by those vertices, and the `uv` coordinates that define how the material is wrapped around the mesh.
 
 Let's create a basic box geometry using [`THREE.BoxGeometry(width, height, depth)`](https://threejs.org/docs/index.html#api/en/geometries/BoxGeometry), that simplily instantiates a cube with the given width, height and depth. Then, let's create a basic material using [`THREE.MeshBasicMaterial({color})`](https://threejs.org/docs/index.html#api/en/materials/MeshBasicMaterial), which will instantiate a simple shaded material that doesn't get affected by ligths. This means, we don't need to create a light in order to see the material. Subsequently let's create a mesh object [`THREE.Mesh(geometry, material)`](https://threejs.org/docs/index.html#api/en/objects/Mesh) that takes both `geometry` and `material` as arguments, and add it to the scene by calling `scene.add(mesh)`.
