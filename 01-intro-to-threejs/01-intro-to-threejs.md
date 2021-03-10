@@ -286,7 +286,7 @@ mtlLoader.load(materialPath, (preMaterial) => {
 Open your terminal, go to the folder where your root file is located, in general this file is called `index.html`, and run the following commands:
 * Python 2
 ```
-$ pthon -m SimpleHTTPServer port
+$ python -m SimpleHTTPServer port
 ```
 * Python 3
 ```
