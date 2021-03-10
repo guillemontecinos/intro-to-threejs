@@ -337,23 +337,24 @@ transformMatrix.multiply(translationMatrix)
     <img src="https://render.githubusercontent.com/render/math?math=\Large%20A''=A'T=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%26t_xcos\theta-t_ysin\theta\\sin\theta%26cos\theta%260%26t_xsin\theta%2Bt_ycos\theta\\0%260%261%26t_z\\0%260%260%261\end{array}\right]">
 </p>
 
+<!-- Now, in this particular case since the `cubeLookAt` is defined as `t = (0, 1, 0)`, `A''` is:
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=\Large%20A''=A'T=\left[\begin{array}{cccc}cos\theta%26-sin\theta%260%26t_xcos\theta-t_ysin\theta\\sin\theta%26cos\theta%260%26t_xsin\theta%2Bt_ycos\theta\\0%260%261%260\\0%260%260%261\end{array}\right]">
+</p> -->
+
+Finally, let's apply the transformation to the cube's matrix in order to update its position based on the user interaction.
+
+```js
+cubeMesh.matrix.multiply(transformMatrix)
+```
+
 ```js
 // Scenario Guard
 const planeGuard = new THREE.Box3().setFromObject(planeMesh)
 ```
-```js
-// Test if inside the guard
-// Create an auxiliary matrix to estimate the next position after the transform is applied
-const nextTransformMatrix = new THREE.Matrix4().copy(cubeMesh.matrix)
-// Apply transformation
-nextTransformMatrix.multiply(transformMatrix)
-// Retrieve position 3D vector from next step matrix
-const pos = new THREE.Vector3().setFromMatrixPosition(nextTransformMatrix)
-pos.z = 0
-// Update the cube's matrix to that vector only if the vector is inside the plane guard.
-if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
-```
-
+#### Rendering the new matrix
+In order to see how the transformation applied to the matrix affects the position of the cube in the 3D world, we need to refresh the canvas. We do this by implementing the function `renderFrame()` (as we did in the tutorial [01 – Intro to Three.js – From nothing to importing an .obj model](https://github.com/guillemontecinos/itp-residency-2020-2021/blob/master/three-js/tutorials/01-intro-to-threejs/intro-to-threejs.md)), inside which we update the cube's position by calling `updateCubeTransform()`.
 
 ```js
 // Render
@@ -382,6 +383,20 @@ function resizeRendererToDisplaySize(renderer){
     }
     return needsResize
 }
+```
+#### Defining scene's boundaries
+
+```js
+// Test if inside the guard
+// Create an auxiliary matrix to estimate the next position after the transform is applied
+const nextTransformMatrix = new THREE.Matrix4().copy(cubeMesh.matrix)
+// Apply transformation
+nextTransformMatrix.multiply(transformMatrix)
+// Retrieve position 3D vector from next step matrix
+const pos = new THREE.Vector3().setFromMatrixPosition(nextTransformMatrix)
+pos.z = 0
+// Update the cube's matrix to that vector only if the vector is inside the plane guard.
+if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
 ```
 
 ## Appendix – 3D Matrices
