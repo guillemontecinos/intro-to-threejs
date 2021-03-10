@@ -13,6 +13,9 @@ This tutorial is highly inspired on –not to say it's nearly a remix of– [Thr
     * [Creating a camera](#creating-a-camera)
     * [Rendering a Basic Cube](#rendering-a-basic-cube)
     * [Animating the Cube](#animating-the-cube)
+* [Making the canvas responsive](#making-the-canvas-responsive)
+* [Adding basic lights](#adding-basic-lights)
+* 
 
 ## The Three.js structure
 Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `objects`, `lights`, `meshes`, `materials`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
@@ -179,7 +182,7 @@ light.position.set(-1, 2, 4)
 scene.add(light)
 ```
 
-## Adding Orbit Control
+## Implementing Orbit Control
 Let's now add an orbit controller to the scene which will allow us to move the camera around a target point. First of all, let's import the Orbit Control package.
 
 ```js
