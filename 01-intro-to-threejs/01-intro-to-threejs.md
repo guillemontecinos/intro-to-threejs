@@ -17,6 +17,7 @@ This tutorial is highly inspired on –not to say it's nearly a remix of– [Thr
 * [Adding basic lights](#adding-basic-lights)
 * [Implementing Orbit Control](#implementing-orbit-control)
 * [Importing an .OBJ file](#importing-an-obj-file)
+* [Appendix: Running a local server](#appendix-running-a-local-server)
 
 ## The Three.js structure
 Three.js' structure is very similar to any 3D engine like Unity, Unreal or Spark AR. There is a `scene` that parents all the elements on it: `objects`, `lights`, `meshes`, `materials`, etc. The scene implies a hierarchical structure of properties heritage, where childs inherit their parent's physical properties as position, rotation and scale (the three of them usually known in the computer graphics world as the transform).
