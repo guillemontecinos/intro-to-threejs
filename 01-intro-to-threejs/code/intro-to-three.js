@@ -89,11 +89,11 @@ requestAnimationFrame(renderFrame)
 
 function resizeRendererToDisplaySize(renderer){
     // console.log(camera.position)
-    const canvas = renderer.domElement
+    const cnv = renderer.domElement
     // get the browser window's size
-    const width = canvas.clientWidth
-    const height = canvas.clientHeight
-    const needsResize = width != canvas.width || height != canvas.height
+    const width = cnv.clientWidth
+    const height = cnv.clientHeight
+    const needsResize = width != cnv.width || height != cnv.height
     if (needsResize) {
         renderer.setSize(width, height, false)
     }
