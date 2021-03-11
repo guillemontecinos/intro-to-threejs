@@ -381,14 +381,14 @@ function resizeRendererToDisplaySize(renderer){
 }
 ```
 #### Defining the scene's boundaries
-Finally, to make the game look more like an actual game let's set some boundaries to the scene so the player can't move out of the plane. We can do that by setting a 3D bounding box based on the plane size that is declared as follows.
+To make the game look more like an actual game let's set some boundaries to the scene so the player can't move out of the plane. We can do that by setting a 3D bounding box based on the plane size that is declared as follows.
 
 ```js
 // Scenario Guard
 const planeGuard = new THREE.Box3().setFromObject(planeMesh)
 ```
 
-Then, inside the function `updateCubeTransform()` we have to test if the next position of the cube is inside the box. To do this we need an auxiliary matrix that get's uesd to calculate the next position without applying the transformation to the actual cube's matrix. This matrix can be initialized as a copy of `cubeMesh.matrix` and the transformation can be applied to it by right-multiplying it by the `transformMatrix`.
+Then, inside the function `updateCubeTransform()` we have to test if the next position of the cube is inside the box or not. To do this we need an auxiliary matrix that get's uesd to calculate the next position without applying the transformation to the actual cube's matrix. This matrix can be initialized as a copy of `cubeMesh.matrix` and the transformation can be applied right-multiplying it by the `transformMatrix`. We need to check if the next position is inside the cube, but since the position is a `Vector3`, we need to define a vector `pos` that created from the matrix's position. Then, since the bounding box represents a flat plane, its `z-coordinates` will be always `0`, next we have to force `pos_z = 0`. Finally, if `planeGuard.containsPoint(pos) == true` we set the cube's matrix to `nextTransformMatrix`.
 
 ```js
 // Test if inside the guard
