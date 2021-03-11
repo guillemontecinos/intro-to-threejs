@@ -9,6 +9,25 @@ This tutorial is the second of the *Intro to three.js series*. In this one we wi
   <img src="./assets/game-demo.gif" align="middle" width="80%">
 </p>
 
+## Index
+* [Scenario Setup](#scenario-setup)
+    * [Basic Setup – Canvas, Renderer, Scene and Lighting](#basic-setup--canvas-renderer-scene-and-lighting)
+    * [Plane Setup – Geometry, Texture and Guard](#plane-setup--geometry-texture-and-guard)
+* [Player Setup – Cube and Camera](#player-setup--cube-and-camera)
+    * [Creating a cube-shaped player](#creating-a-cube-shaped-player)
+    * [Attaching a camera to the player](#attaching-a-camera-to-the-player)
+* [3D transforms and interaction](#3d-transforms-and-interaction)
+    * [Setting User Interaction](#setting-user-interaction)
+        * [Translation Interaction](#translation-interaction)
+        * [Rotation interaction](#rotation-interaction)
+    * [Transforming the Player's matrix](#transforming-the-players-matrix)
+        * [Starting with an Identity matrix](#starting-with-an-identity-matrix)
+        * [The Rotation matrix](#the-rotation-matrix)
+        * [The Translation matrix](#the-translation-matrix)
+        * [Rendering the new matrix](#rendering-the-new-matrix)
+        * [Defining the scene's boundaries](#defining-the-scenes-boundaries)
+* [Appendix – 3D Matrices](#appendix--3d-matrices)
+
 ## Scenario Setup
 Let's start by setting up the scenario where our lonely cube will exist and move around.
 
