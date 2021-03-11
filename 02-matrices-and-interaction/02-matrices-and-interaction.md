@@ -388,7 +388,7 @@ To make the game look more like an actual game let's set some boundaries to the 
 const planeGuard = new THREE.Box3().setFromObject(planeMesh)
 ```
 
-Then, inside the function `updateCubeTransform()` we have to test if the next position of the cube is inside the box or not. To do this we need an auxiliary matrix that get's uesd to calculate the next position without applying the transformation to the actual cube's matrix. This matrix can be initialized as a copy of `cubeMesh.matrix` and the transformation can be applied right-multiplying it by the `transformMatrix`. We need to check if the next position is inside the cube, but since the position is a `Vector3`, we need to define a vector `pos` that created from the matrix's position. Then, since the bounding box represents a flat plane, its `z-coordinates` will be always `0`, next we have to force `pos_z = 0`. Finally, if `planeGuard.containsPoint(pos) == true` we set the cube's matrix to `nextTransformMatrix`.
+Then, inside the function `updateCubeTransform()` we have to test if the next position of the cube is inside the box or not. To do this we need an auxiliary matrix calles `nextTransformMatrix` that get's uesd to calculate the next position without applying the transformation to the actual cube's matrix. This matrix can be initialized as a copy of `cubeMesh.matrix` and the transformation can be applied right-multiplying it by the `transformMatrix`. We need to check if the next position is inside the cube, but since the position is a `Vector3`, we need to define a vector `pos` that created from the matrix's position. Then, since the bounding box represents a flat plane, its `z-coordinates` will be always `0`, next we have to force `pos_z = 0`. Finally, if `planeGuard.containsPoint(pos) == true` we set the cube's matrix to `nextTransformMatrix`.
 
 ```js
 // Test if inside the guard
@@ -404,8 +404,4 @@ if(planeGuard.containsPoint(pos)) cubeMesh.matrix.copy(nextTransformMatrix)
 ```
 
 ## Appendix – 3D Matrices
-* [`THREE.Matrix4()`](https://threejs.org/docs/index.html#api/en/math/Matrix4)
-* [Matrices – opengl-tutorial](http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/)
-* [The True Power of the Matrix (Transformations in Graphics) - Computerphile](https://www.youtube.com/watch?v=vQ60rFwh2ig)
-* [Understanding 3D matrix transforms](https://medium.com/swlh/understanding-3d-matrix-transforms-with-pixijs-c76da3f8bd8)
-* [Matrix transformations – Three.js](https://threejs.org/docs/#manual/en/introduction/Matrix-transformations)
+If you are new to matrices and need some onboarding I really recommend the video [The True Power of the Matrix (Transformations in Graphics)](https://www.youtube.com/watch?v=vQ60rFwh2ig) by Computerphile and this great tutorial by [opengl-tutorial](http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/), both of them oriented to the Transformation matrix. I also recommend the tutorial [Understanding 3D matrix transforms](https://medium.com/swlh/understanding-3d-matrix-transforms-with-pixijs-c76da3f8bd8) and three.js' documentation: [`THREE.Matrix4()`](https://threejs.org/docs/index.html#api/en/math/Matrix4) and [Matrix transformations – Three.js](https://threejs.org/docs/#manual/en/introduction/Matrix-transformations).
