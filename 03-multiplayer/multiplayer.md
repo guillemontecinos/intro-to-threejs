@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="./assets/user-move-interaction.jpg" align="middle" width="80%">
+  <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
 </p>
 
 ## Client
