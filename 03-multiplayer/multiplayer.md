@@ -10,10 +10,26 @@ The architecture of the system we need to build consists of a server whith whom 
   <img src="./assets/client-server-achitecture.jpg" align="middle" width="50%">
 </p>
 
+Before starting to write the server code, we need to create a new project with Node Package Manager ([npm](https://www.npmjs.com/)), a framework that will help us download and manage all libraries and dependencies of our project. To do that, go to the root folder of the project and type the following command in the console.
+
+```bash
+$ npm init
+```
+
+The system will ask you a couple of questions to customize the project, but for example we can just hit enter to all the questions. Then, let's create a script for that server under the name of `index.js`. Then, inside the server script let's start importing the packages we are going to use by calling the function `require(package)`. Let's start by importing `express` and `path` which we will use to set up the base server.
+
 ```js
 const express = require('express')
 const path = require('path')
+```
 
+After calling the packages from the server, we need to import them to the project modules' folder. To do that go to the main folder of the project and type the following command in the terminal.
+
+```bash
+$ node install express
+```
+
+```js
 // Instantiate express app
 const app = express()
 // Import and intialize ws server instance on express
@@ -162,12 +178,6 @@ function sendMessage(data){
 ```
 ## Server
 ```js
-// 03 – Intro to Three.js – Multplayer
-// Server code
-// by Guillermo Montecinos
-// March 2021
-// WebSocket implementetion based on Tom Igoe's web socket examples: https://tigoe.github.io/websocket-examples/
-
 // Callback function that get's executed when a new socket is intialized/connects
 function handleWs(ws){
     console.log('New user connected: ' + ws)
