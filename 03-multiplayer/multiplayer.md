@@ -1,5 +1,7 @@
 # 03 – Intro to Three.js – Multiplayer
 
+This is the third of a series of *intro to three.js tutorials*. In this one we will convert the basic game developed in [02 – Intro to Three.js – Matrices and interaction](../02-matrices-and-interaction/02-matrices-and-interaction.md) into a multiplayer game, by learning how to write a [Node.js](https://nodejs.org/) server using [express](https://expressjs.com/) and implement [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) in three.js. The WebSockets implementation is based on Tome Igoe's [examples](https://tigoe.github.io/websocket-examples/).
+
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
 </p>
