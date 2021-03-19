@@ -50,23 +50,16 @@ app.listen(port, function(){
 })
 ```
 
-<p align="center">
-  <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
-</p>
-
-<p align="center">
-  <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
-</p>
-
-## Client
+Setting up the server for sockets.
 ```js
-// 03 – Intro to Three.js – Multplayer
-// Client code
-// by Guillermo Montecinos
-// March 2021
+// Import and intialize ws server instance on express
+const wsServer = require('express-ws')(app)
 
-import * as THREE from 'https://unpkg.com/three@0.121.1/build/three.module.js'
+let users = []
+```
 
+## Setting up the client to stablish a WebSockets connection
+```js
 // Web socket setup (https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 // Retrieve host's address
 const url = 'ws://' + location.host
@@ -77,7 +70,10 @@ const socket = new WebSocket(url);
 socket.addEventListener('message', readIncomingMessage)
 // Use an array to keep track of users status
 let users = new Array()
+```
 
+### Wrapping the cube mesh intialization on a function
+```js
 // Cube setup
 // Two kind of cubes can be created: this cube, in which the user sets all their params, and the instances of other users cubes, which are intialized with the params provided by the server.
 function newCube(isThis, color, initMatrix){
@@ -115,7 +111,20 @@ const posY = THREE.MathUtils.mapLinear(Math.random(), 0, 1, planeGuard.min.y, pl
 const translateMt = new THREE.Matrix4().makeTranslation(posX, posY, .5)
 const thisCube = newCube(true, new THREE.Color().setHSL(Math.random(), .67, .4), translateMt)
 scene.add(thisCube.mesh)
+```
 
+## Designing the interaction between client and server
+
+<p align="center">
+  <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
+</p>
+
+<p align="center">
+  <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
+</p>
+
+## Code
+```js
 function updateCubeTransform() {
     
     // For efficiency purposes let's make all calculations and matrix update only when an interaction is detected
@@ -175,13 +184,8 @@ function sendMessage(data){
     }
 }
 ```
-## Server
+
 ```js
-// Import and intialize ws server instance on express
-const wsServer = require('express-ws')(app)
-
-let users = []
-
 // Callback function that get's executed when a new socket is intialized/connects
 function handleWs(ws){
     console.log('New user connected: ' + ws)
