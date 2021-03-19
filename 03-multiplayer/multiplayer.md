@@ -5,6 +5,9 @@ This is the third of a series of [*intro to three.js tutorials*](https://github.
 
 ## Writing a basic Node.js server
 
+<p align="center">
+  <img src="./assets/client-server-achitecture.jpg" align="middle" width="60%">
+</p>
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
