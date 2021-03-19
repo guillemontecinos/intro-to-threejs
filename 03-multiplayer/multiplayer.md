@@ -4,11 +4,36 @@
 This is the third of a series of [*intro to three.js tutorials*](https://github.com/guillemontecinos/intro-to-threejs). In this one we will convert the basic game developed in [02 – Intro to Three.js – Matrices and interaction](../02-matrices-and-interaction/02-matrices-and-interaction.md) into a multiplayer game, by learning how to write a [Node.js](https://nodejs.org/) server using [express](https://expressjs.com/) and implement [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) in three.js. The WebSockets implementation is based on Tome Igoe's [examples](https://tigoe.github.io/websocket-examples/).
 
 ## Writing a basic Node.js server
-The architecture of the system we need to build consists of a server whith whom all the clients –namely users– stablish a WebSocket connection. Through this connection the clients send information to the server such as initial position and color, and position updates. This data is processed by the server and broadcaste over the network to all the clients. For this purpose we will write a Node.js (a JavaScriptback-end environment) server using express
+The architecture of the system we need to build consists of a server whith whom all the clients –users– stablish a WebSocket connection. Through this connection the clients send information to the server such as initial position and color, and position updates. This data is processed by the server and broadcasted over the network to all the clients. For this purpose we will write a Node.js (a JavaScript back-end environment) server that uses express to handle HTTP requests and responses.
 
 <p align="center">
   <img src="./assets/client-server-achitecture.jpg" align="middle" width="50%">
 </p>
+
+```js
+const express = require('express')
+const path = require('path')
+
+// Instantiate express app
+const app = express()
+// Import and intialize ws server instance on express
+const wsServer = require('express-ws')(app)
+
+let users = []
+// Use the public folder to load html/js files
+app.use(express.static('public'))
+
+// on get '/' send page to the user
+app.get('/', function (req, res){
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+})
+
+// Server init
+const port = process.env.PORT || 3000
+app.listen(port, function(){
+    console.log('Server listening on port ' + port)
+})
+```
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
@@ -143,23 +168,6 @@ function sendMessage(data){
 // March 2021
 // WebSocket implementetion based on Tom Igoe's web socket examples: https://tigoe.github.io/websocket-examples/
 
-const express = require('express')
-const path = require('path')
-
-// Instantiate express app
-const app = express()
-// Import and intialize ws server instance on express
-const wsServer = require('express-ws')(app)
-
-let users = []
-// Use the public folder to load html/js files
-app.use(express.static('public'))
-
-// on get '/' send page to the user
-app.get('/', function (req, res){
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-})
-
 // Callback function that get's executed when a new socket is intialized/connects
 function handleWs(ws){
     console.log('New user connected: ' + ws)
@@ -215,12 +223,6 @@ function handleWs(ws){
     ws.on('message', messageReceived)
     ws.on('close', endUser)
 }
-
-// Server init
-const port = process.env.PORT || 3000
-app.listen(port, function(){
-    console.log('Server listening on port ' + port)
-})
 
 // Sockets init
 app.ws('/', handleWs)
