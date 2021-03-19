@@ -23,19 +23,18 @@ const express = require('express')
 const path = require('path')
 ```
 
-After calling the packages from the server, we need to import them to the project modules' folder. To do that go to the main folder of the project and type the following command in the terminal.
+After calling the packages from the server, we need to import them to the project modules' folder, by going to the main folder of the project and typing the following command in the terminal.
 
 ```bash
 $ node install express
 ```
 
+Then, we can create the server by calling the function `express()` and assigning it to a variable, in this case called `app`.
+
 ```js
 // Instantiate express app
 const app = express()
-// Import and intialize ws server instance on express
-const wsServer = require('express-ws')(app)
 
-let users = []
 // Use the public folder to load html/js files
 app.use(express.static('public'))
 
@@ -178,6 +177,11 @@ function sendMessage(data){
 ```
 ## Server
 ```js
+// Import and intialize ws server instance on express
+const wsServer = require('express-ws')(app)
+
+let users = []
+
 // Callback function that get's executed when a new socket is intialized/connects
 function handleWs(ws){
     console.log('New user connected: ' + ws)
