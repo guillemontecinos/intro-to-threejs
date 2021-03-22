@@ -29,7 +29,7 @@ After calling the packages from the server, we need to import them to the projec
 $ node install express
 ```
 
-Then, we can create the server by calling the function `express()` and assigning it to a variable, in this case called `app`.
+Similar thing hast to be done with `path`. Then, we can create the server by calling the function `express()` and assigning it to a variable, in this case called `app`. In order to serve more than one file (in this case the `index.html` file and the `multiplayer.js` script) we need to set an static folder that can be accessed by the client anytime, by telling the `app` to use a folder, which in this case is called `public`.
 
 ```js
 // Instantiate express app
@@ -37,7 +37,8 @@ const app = express()
 
 // Use the public folder to load html/js files
 app.use(express.static('public'))
-
+```
+```js
 // on get '/' send page to the user
 app.get('/', function (req, res){
     res.sendFile(path.join(__dirname, '/public/index.html'))
@@ -57,6 +58,15 @@ const wsServer = require('express-ws')(app)
 
 let users = []
 ```
+
+```js
+// Callback function that get's executed when a new socket is intialized/connects
+function handleWs(ws){}
+
+// Sockets init
+app.ws('/', handleWs)
+```
+
 
 ## Setting up the client to stablish a WebSockets connection
 ```js
