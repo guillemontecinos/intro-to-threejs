@@ -56,13 +56,15 @@ app.listen(port, function(){
 })
 ```
 
-Setting up the server for sockets.
+### Setting up WebSockets the server
+WebSockets (WS) is a web communication protocol that is natively supported by most web browsers, but not in all back-end environments. Hence, we need to import a WS implementation for express that instantiates a connection and helps express handle incoming and outgoing messages. Let's use the module `express-ws` which instantiates a WS server by taking the server `app` as an argument.
+
 ```js
 // Import and intialize ws server instance on express
 const wsServer = require('express-ws')(app)
-
-let users = []
 ```
+
+The WS server get's started by calling the express function `ws` that takes a url and a callback meant to handle events such as sockets connections, disconnections and received messages.
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
