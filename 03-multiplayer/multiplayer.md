@@ -56,7 +56,7 @@ app.listen(port, function(){
 })
 ```
 
-### Setting up WebSockets the server
+### Setting up WebSockets in the express server
 WebSockets (WS) is a web communication protocol that is natively supported by most web browsers, but not in all back-end environments. Hence, we need to import a WS implementation for express that instantiates a connection and helps express handle incoming and outgoing messages. Let's use the module `express-ws` which instantiates a WS server by taking the server `app` as an argument.
 
 ```js
@@ -74,8 +74,9 @@ function handleWs(ws){}
 app.ws('/', handleWs)
 ```
 
-
 ## Setting up the client to stablish a WebSockets connection
+As we said in the introduction, in this project we will use the script developed in the tutorial [02 – Intro to Three.js – Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md) to build a multiplayer game. Starting from that code, let's open an new WebSocket instantiated in the variable `const socket =  new WebSocket(url)`, that takes a server url starting with `ws://` insted `http://` or `https://`. Then, let's add a listener to the event `'message'` that will execute a the callback `readIncomingMessage` every time a new message is received. Let's also declare an empty array called `users` to keep track of all the users in the network (we'll get back to that later).
+
 ```js
 // Web socket setup (https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
 // Retrieve host's address
