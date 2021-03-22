@@ -127,6 +127,11 @@ function newCube(isThis, color, initMatrix){
         return cubeMesh
     }
 }
+```
+
+Then, after declaring the function we can instantiate the local cube by declaring a random position inside the scene.
+
+```js
 // Intialize by default this cube
 const posX = THREE.MathUtils.mapLinear(Math.random(), 0, 1, planeGuard.min.x, planeGuard.max.x)
 const posY = THREE.MathUtils.mapLinear(Math.random(), 0, 1, planeGuard.min.y, planeGuard.max.y)
