@@ -75,7 +75,7 @@ app.ws('/', handleWs)
 ```
 
 ## Setting up the client to stablish a WebSockets connection
-As we said in the introduction, in this project we will use the script developed in the tutorial [02 – Intro to Three.js – Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md) to build a multiplayer game. Starting from that code, let's open an new WebSocket instantiated in the variable `const socket =  new WebSocket(url)`, that takes a server url starting with `ws://` insted `http://` or `https://`. Then, let's add a listener to the event `'message'` that will execute a the callback `readIncomingMessage` every time a new message is received. Let's also declare an empty array called `users` to keep track of all the users in the network (we'll get back to that later).
+As we said in the introduction, in this project we will use the script developed in the tutorial [02 – Intro to Three.js – Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md) to build a multiplayer game. Starting from that code, let's open an new WebSocket instantiated in the variable `const socket =  new WebSocket(url)`, that takes a server url starting with `ws://` insted `http://` or `https://`. Then, let's add a listener to the event `'message'` that will execute a the callback `readIncomingMessage` every time a new message is received.
 
 ```js
 // Web socket setup (https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
@@ -90,7 +90,11 @@ socket.addEventListener('message', readIncomingMessage)
 let users = new Array()
 ```
 
-### Wrapping the cube mesh intialization on a function
+### Wrapping the cube mesh intialization with a function
+Since this will be a multiplayer game, we need to locally instantiate a new box for each user and also keep track of each of their status. Let's then declare an empty array called `users` to keep track of all the users in the network (we'll get back to that later). Additioanlly, let's update the process of instancing a cube in the scene based on last tutorial's code.
+
+In this case, two kind of cubes can be instantiated: the player's cube and other players cube. In general we need both cubes have a mesh (composed by a material and geometry), and the main difference between them is that the local cube needs a camera attached and the others not. Then, let's create the function `newCube()` that takes three arguments: a boolean `isThis` which indicates whether we are instantiating the local cube, the cube's color, and the intialization matrix. The function has to be designed in order to return either an object that contains the cube's mesh and `lookAt` vector for the local cube, or just the mesh for other players' cubes.
+
 ```js
 // Cube setup
 // Two kind of cubes can be created: this cube, in which the user sets all their params, and the instances of other users cubes, which are intialized with the params provided by the server.
