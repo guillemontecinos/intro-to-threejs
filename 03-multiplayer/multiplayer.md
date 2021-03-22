@@ -39,7 +39,9 @@ const app = express()
 app.use(express.static('public'))
 ```
 
-Then, in order to listen and respond to the HTTP requests (GET or/and POST) we need to set an event listener that catches each request. In this case we need to listen to the `GET` requests from the browser, which correspond to the action of typing a url in the browsing bar and hitting enter. We do that by calling the function `app.get()` that takes `'/'` as an argument, which means *any request to the server's root url*. The, as a response we send the `index.html` file back to the browser. The final step to setup the server consists on choosing what port the server will be listening at, in this case `process.env.PORT || 3000` (which takes 3000 or a previously assigned port for a deployed server), and starting the server by calling the function `app.listen()` that takes the `port` as an argument and a callback that can be used to debug if the server is working properly.
+Then, in order to listen and respond to the HTTP requests (GET or/and POST) we need to set an event listener that catches each request. In this case we need to listen to the `GET` requests from the browser, which correspond to the action of typing a url in the browsing bar and hitting enter. We do that by calling the function `app.get()` that takes `'/'` as an argument, which means *any request to the server's root url*. As a response to that request we send the `index.html` file back to the browser. 
+
+The final step to setup the server consists on choosing what port the server will be listening at, in this case `process.env.PORT || 3000` (which takes 3000 or a previously assigned port for a deployed server), and starting the server by calling the function `app.listen()` that takes the `port` as an argument and a callback that can be used to debug if the server is working properly.
 
 ```js
 // on get '/' send page to the user
