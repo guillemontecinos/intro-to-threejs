@@ -38,6 +38,9 @@ const app = express()
 // Use the public folder to load html/js files
 app.use(express.static('public'))
 ```
+
+Then, in order to listen and respond to HTTP requests (GET or/and POST) we need to set an event listener that catches each request. We do that by calling the function `app.get()` that takes `'/'` as an argument, which means *any request to the server's root url*. The, as a response we send the `index.html` file back to the browser. The final setup step consists on choosing what port the server will be listening at, in this case `process.env.PORT || 3000` (which takes 3000 or a previously assigned port for a deployed server)
+
 ```js
 // on get '/' send page to the user
 app.get('/', function (req, res){
