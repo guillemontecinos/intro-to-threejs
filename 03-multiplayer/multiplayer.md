@@ -173,18 +173,8 @@ function handleWs(ws){
 Once a new socket connects we need to inform the player which its ID, which we send by calling the function `ws.send()` that expects the message to be formatted as a string
 
 ```js
-let users = []
-
-// Callback function that get's executed when a new socket is intialized/connects
-function handleWs(ws){
-    console.log('New user connected: ' + ws)
-    // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
-    ws.send(JSON.stringify({type: 'user-init', id: users.length}))
-    users.push({socket: ws, id: users.length})
-
-    // Attach callbacks to the socket as soon it gets connected
-    ws.on('message', messageReceived)
-    ws.on('close', endUser)
+// As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
+ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 }
 ```
 
