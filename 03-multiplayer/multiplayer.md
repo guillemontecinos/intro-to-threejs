@@ -178,7 +178,7 @@ Once a new socket connects we need to inform the player which ID it is assigned 
 ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 ```
 
-### Initializing the user ID
+### Initializing the user's ID
 Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres. To do that, we firstly have to declare the callback `readIncomingMessage` we invoked when the client started a new WS connection. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
 
 ```js
