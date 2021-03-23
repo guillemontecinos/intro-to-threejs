@@ -75,7 +75,7 @@ app.ws('/', handleWs)
 ```
 
 ## Setting up the client to stablish a WebSockets connection
-As we said in the introduction, in this project we will use the script developed in the tutorial [02 – Intro to Three.js – Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md) to build a multiplayer game. Starting from that code, let's open an new WebSocket instantiated in the variable `const socket =  new WebSocket(url)`, that takes a server url starting with `ws://` insted `http://` or `https://`. Then, let's add a listener to the event `'message'` that will execute a the callback `readIncomingMessage` every time a new message is received.
+As we said in the introduction, in this project we will use the script developed in the tutorial [02 – Intro to Three.js – Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md) to build a multiplayer game. Starting from that code, let's open an new WebSocket instantiated in the variable `const socket =  new WebSocket(url)`, that takes a server url starting with `ws://` insted `http://` or `https://`. Then, let's add a listener to the event `'message'` that will execute a the callback `readIncomingMessage` every time a new message is received, which we'll declare later.
 
 ```js
 // Web socket setup (https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
@@ -143,6 +143,7 @@ scene.add(thisCube.mesh)
 ## Designing the interaction between client and server
 Every time a new player connects to the server, a series of concatenated messages must be send between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
 
+### Initializing a new WebSocket on the server
 Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects. Let's setup the event listeners by calling the function `ws.on()`, that takes an event and a callback. In this case we will declare the callbacks later.
 
 ```js
@@ -177,6 +178,23 @@ Once a new socket connects we need to inform the player which ID it is assigned 
 ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 ```
 
+### Initializing the user ID
+Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres. To do that, we firstly have to declare the callback `readIncomingMessage` we invoked when the client started a new WS connection. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
+
+```js
+// Web socket incoming messages handler callback
+function readIncomingMessage(e){ 
+    // Parse the indoming data into a json object
+    const data = JSON.parse(e.data) 
+    // User init means the server has responded to the connection with the id it assigned to the user
+    if(data.type === 'user-init') {
+        thisCube.id = data.id
+        console.log(thisCube)
+        // Send to the server the initial attributes of the local cube
+        sendMessage(JSON.stringify({type: 'user-setup', matrix: thisCube.mesh.matrix.elements, color: thisCube.mesh.material.color.getHex(), id: thisCube.id}))
+    }
+}
+```
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
