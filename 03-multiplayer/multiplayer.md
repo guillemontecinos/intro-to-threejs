@@ -143,9 +143,51 @@ scene.add(thisCube.mesh)
 ## Designing the interaction between client and server
 Every time a new player connects to the server, a series of concatenated messages must be send between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
 
-Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects.
+Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects. Let's setup the event listeners by calling the function `ws.on()`, that takes an event and a callback. In this case we will declare the callbacks later.
 
-Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects.
+```js
+// Callback function that get's executed when a new socket is intialized/connects
+function handleWs(ws){
+    // Attach callbacks to the socket as soon it gets connected
+    ws.on('message', messageReceived)
+    ws.on('close', endUser)
+}
+```
+
+Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects, data we push to the `users` array.
+
+```js
+let users = []
+
+// Callback function that get's executed when a new socket is intialized/connects
+function handleWs(ws){
+    console.log('New user connected: ' + ws)
+    users.push({socket: ws, id: users.length})
+
+    // Attach callbacks to the socket as soon it gets connected
+    ws.on('message', messageReceived)
+    ws.on('close', endUser)
+}
+```
+
+Once a new socket connects we need to inform the player which its ID, which we send by calling the function `ws.send()` that expects the message to be formatted as a string
+
+```js
+let users = []
+
+// Callback function that get's executed when a new socket is intialized/connects
+function handleWs(ws){
+    console.log('New user connected: ' + ws)
+    // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
+    ws.send(JSON.stringify({type: 'user-init', id: users.length}))
+    users.push({socket: ws, id: users.length})
+
+    // Attach callbacks to the socket as soon it gets connected
+    ws.on('message', messageReceived)
+    ws.on('close', endUser)
+}
+```
+
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
