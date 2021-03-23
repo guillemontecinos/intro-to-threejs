@@ -141,6 +141,9 @@ scene.add(thisCube.mesh)
 ```
 
 ## Designing the interaction between client and server
+Every time a new player connects to the server, a series of concatenated messages must be send between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
+
+Whenever a new user connects to the server the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed. This function gets called only once –when the socket connects– and inside it we can setup the listeners to WS's possible events: `'message'` which is executed when a new message is received, and `'close'`that is fired when the socket desconnects.
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
