@@ -170,7 +170,7 @@ function handleWs(ws){
 }
 ```
 
-Once a new socket connects we need to inform the player which ID it is assigned with, which we send with the function `ws.send()` that expects the message to be formatted as a string. Now, since WS only take one type of messages we will face the need of labeling each message to le thet the receiver know what type of information is receiving. To do that, each message will be formatted as an object with a `type` and the devilered content. But since WS doesn't support objects natively, we will have to format each message –and then parse it back to object format– by calling the JS native function `JSON.stringify(message)`.
+Once a new socket connects we need to inform the player which ID it is assigned with, which we send with the function `ws.send()` that expects the message to be formatted as a string. Now, since WS only take one type of messages we will face the need of labeling each message to le thet the receiver know what type of information is receiving. To do that, each message will be formatted as an object with a `type` and the devilered content, in this case `user-init`. But since WS doesn't support objects natively, we will have to format each message –and then parse it back to object format– by calling the JS native function `JSON.stringify(message)`.
 
 ```js
 // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
