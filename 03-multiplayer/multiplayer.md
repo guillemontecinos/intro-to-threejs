@@ -129,7 +129,7 @@ function newCube(isThis, color, initMatrix){
 }
 ```
 
-Then, after declaring the function we can instantiate the local cube by declaring a random position inside the scene.
+Then, after declaring the function we can instantiate the local cube in a variable called `thisCube` in a random initial position.
 
 ```js
 // Intialize by default this cube
