@@ -143,9 +143,9 @@ scene.add(thisCube.mesh)
 ## Designing the interaction between client and server
 Every time a new player connects to the server, a series of concatenated messages must be send between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
 
-Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is executed when a new message is received, and `'close'`that is fired when the socket desconnects.
+Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects.
 
-Since the WS standard don't assign an ID to each socket natively, but we need to keep track of which socket represents which client, we need to manually assign one once the socket connects. The easiest way to do that is having an array of users in the server side and push the new socket to it, hence the length of the array is the number of the following socket to connect, then we assign that as an ID.
+Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it, hence the length of the array is the number of the following socket that connects, then we assign that value as an ID.
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
