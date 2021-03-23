@@ -145,7 +145,7 @@ Every time a new player connects to the server, a series of concatenated message
 
 Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects.
 
-Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it, hence the length of the array is the number of the following socket that connects, then we assign that value as an ID.
+Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects.
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
