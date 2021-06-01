@@ -1,10 +1,10 @@
 # 03 – Intro to Three.js – Multiplayer
 *by Guillermo Montecions, March 2021*
 
-This is the third of a series of [*intro to three.js tutorials*](https://github.com/guillemontecinos/intro-to-threejs). In this one we will convert the basic game developed in [02 – Intro to Three.js – Matrices and interaction](../02-matrices-and-interaction/02-matrices-and-interaction.md) into a multiplayer game, by learning how to write a [Node.js](https://nodejs.org/) server using [express](https://expressjs.com/) and implement [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) in three.js. The WebSockets implementation is based on Tome Igoe's [examples](https://tigoe.github.io/websocket-examples/).
+This is the third of a series of [*intro to three.js tutorials*](https://github.com/guillemontecinos/intro-to-threejs). In this one we will convert the basic game developed in [02 – Intro to Three.js – Matrices and interaction](../02-matrices-and-interaction/02-matrices-and-interaction.md) into a multiplayer game, by learning how to write a [Node.js](https://nodejs.org/) server using [express.js](https://expressjs.com/) and integrating [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) with three.js. The WebSockets implementation is based on Tome Igoe's [examples](https://tigoe.github.io/websocket-examples/).
 
 ## Writing a basic Node.js server
-The architecture of the system we need to build consists of a server whith whom all the clients –users– stablish a WebSocket connection. Through this connection the clients send information to the server such as initial position and color, and position updates. This data is processed by the server and broadcasted over the network to all the clients. For this purpose we will write a Node.js (a JavaScript back-end environment) server that uses express to handle HTTP requests and responses.
+The architecture of the system we need to build consists of a server with which all users stablish a WebSocket connection. Through this connection the clients send information to the server such as initial position, color and position updates. This data is processed by the server and broadcasted over the network to all the clients in real time. For this purpose we will write a Node.js (a JavaScript back-end environment) server that uses express.js to handle HTTP and WebSockets requests and responses.
 
 <p align="center">
   <img src="./assets/client-server-achitecture.jpg" align="middle" width="50%">
@@ -16,7 +16,7 @@ Before starting to write the server code, we need to create a new project with N
 $ npm init
 ```
 
-The system will ask you a couple of questions to customize the project, but for example we can just hit enter to all the questions. Then, let's create a script for that server under the name of `index.js`. Then, inside the server script let's start importing the packages we are going to use by calling the function `require(package)`. Let's start by importing `express` and `path` which we will use to set up the base server.
+The system will ask you a couple of questions to customize the project, but for this example we can just hit enter to all the questions. Then, let's create a script for that server under the name of `index.js`. Inside the server script let's import all the packages we are going to use by calling the function `require(package)`. Let's first import `express` and `path` which we will use to set up the base server.
 
 ```js
 const express = require('express')
@@ -41,7 +41,7 @@ app.use(express.static('public'))
 
 Then, in order to listen and respond to the HTTP requests (GET or/and POST) we need to set an event listener that catches each request. In this case we need to listen to the `GET` requests from the browser, which correspond to the action of typing a url in the browsing bar and hitting enter. We do that by calling the function `app.get()` that takes `'/'` as an argument, which means *any request to the server's root url*. As a response to that request we send the `index.html` file back to the browser. 
 
-The final step to setup the server consists on choosing what port the server will be listening at, in this case `process.env.PORT || 3000` (which takes 3000 or a previously assigned port for a deployed server), and starting the server by calling the function `app.listen()` that takes the `port` as an argument and a callback that can be used to debug if the server is working properly.
+The final step to setup the server consists on choosing what port the server will be listening at, in this case `process.env.PORT || 3000` (which takes 3000 or a previously assigned port for a deployed server), and starting the server by calling the function `app.listen()` that takes the `port` as an argument and a callback that can be used to debug whether the server is working properly or not.
 
 ```js
 // on get '/' send page to the user
@@ -64,7 +64,7 @@ WebSockets (WS) is a web communication protocol that is natively supported by mo
 const wsServer = require('express-ws')(app)
 ```
 
-The WS server get's started by calling the express function `ws` that takes a url and a callback meant to handle events such as sockets connections, disconnections and received messages.
+The WS server get's started by calling the express' function `ws` that takes a url and a callback meant to handle events such as socket connections, disconnections and received messages.
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
@@ -141,7 +141,7 @@ scene.add(thisCube.mesh)
 ```
 
 ## Designing the interaction between client and server
-Every time a new player connects to the server, a series of concatenated messages must be send between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
+Every time a new player connects to the server, a series of concatenated messages must be sent between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
 
 ### Initializing a new WebSocket on the server
 Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects. Let's setup the event listeners by calling the function `ws.on()`, that takes an event and a callback. In this case we will declare the callbacks later.
@@ -155,7 +155,7 @@ function handleWs(ws){
 }
 ```
 
-Since the WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects, data we push to the `users` array.
+The WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects, data we push to the `users` array.
 
 ```js
 let users = []
@@ -171,7 +171,7 @@ function handleWs(ws){
 }
 ```
 
-Once a new socket connects we need to inform the player which ID it is assigned with, which we send with the function `ws.send()` that expects the message to be formatted as a string. Now, since WS only take one type of messages we will face the need of labeling each message to le thet the receiver know what type of information is receiving. To do that, each message will be formatted as an object with a `type` and the devilered content, in this case `user-init`. But since WS doesn't support objects natively, we will have to format each message –and then parse it back to object format– by calling the JS native function `JSON.stringify(message)`.
+Once a new socket connects we need to inform the player which ID it is assigned with, which we send with the function `ws.send()` that expects the message to be formatted as a string. Now, since WS only takes one type of messages we will face the need of labeling each message to let the the receiver know what type of information it is receiving. To do that, each message will be formatted as an object with a `type` and the devilered content, in this case `user-init`. But since WS doesn't support objects natively, we will have to format each message by calling the JS native function `JSON.stringify(message)`.
 
 ```js
 // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
@@ -199,6 +199,8 @@ function readIncomingMessage(e){
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
 </p>
+
+Once the user setup data is received by the server, it has to be stored 
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
