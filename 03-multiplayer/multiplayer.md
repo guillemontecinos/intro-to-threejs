@@ -318,3 +318,31 @@ function messageReceived(m){
 ```
 
 ### User Disconnection
+
+#### User
+```js
+// Delete the user that disconnected from the users array
+else if(data.type == 'user-disconnect') {
+    const index = users.findIndex(user => user.id == data.id)
+    console.log('user ' + users[index].id + ' disconnected')
+    // Remove the cube from the scene
+    scene.remove(users[index].mesh)
+    // Remove the user form users
+    users.splice(index, 1)
+}
+```
+#### Server
+```js
+// When a user disconnects, remove it from the users array and inform all the clients in the network
+function endUser() {
+    const index = users.findIndex(user => user.socket == ws)
+    users.forEach((user) => {
+        if(user.socket != ws) {
+            // Let know all users that aren't the one disconnecting from the disconnection
+            user.socket.send(JSON.stringify({type: 'user-disconnect', id: users[index].id}))
+        }
+    })
+    console.log('user id: ' + users[index].id + ' disconnected')
+    users.splice(index, 1)
+}
+```
