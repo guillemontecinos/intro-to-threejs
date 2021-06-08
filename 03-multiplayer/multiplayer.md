@@ -179,12 +179,13 @@ ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 ```
 
 ### Initializing the user's ID
+The following diagram describes the process of initializing a new cube. We already learned how an ID is assigned to a new socket and how the respective client is informed of that.
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
 </p>
 
-Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres. To do that, we firstly have to declare the callback `readIncomingMessage` we invoked when the client started a new WS connection. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
+Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres (ID, initialization matrix and color). To do that, we firstly have to declare the callback `readIncomingMessage` which is attached to the socket's `message` event. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
 
 ```js
 // Web socket incoming messages handler callback
