@@ -202,7 +202,7 @@ function readIncomingMessage(e){
 }
 ```
 
-When a new user is setup and its intialization data received by the server, we need to both store that data on the server's users array and to inform the rest of clients that a new user connected, so each user can locally include the new user on their records. To do that, every time a message `user-setup` is received, we need to iterate over the elements of the `users` array (each of them called `user`) and check whether each of them corresponds to the connecting socket (`ws`) or not. If an element of the array corresponds to the socket –which we test by comparing `user.socket == ws`– we just assign
+When a new user is setup and its intialization data received at the server by the function `messageReceived(m)`, we need to both store that data on the server's users array and to inform the rest of clients that a new user connected, so each user can locally include the new user on their records. To do that, every time a message `user-setup` is received, we need to iterate over the elements of the `users` array (each of them called `user`) and check whether each of them corresponds to the connecting socket (`ws`) or not. If an element of the array corresponds to the socket –which we test by comparing `user.socket == ws`– we just assign
 
 ```js
 users.forEach((user) => {
@@ -217,41 +217,41 @@ users.forEach((user) => {
 If the current socket (`user`) on the array iteration is not equal to the connecting socket (`ws`), we have to do two things: 1) telling `ws` that there was a previous `user` connected to the system, and 2) inform the previous `user` of `ws` being connected. We do the first thing by calling `ws.send()` and sending the `user`'s initialization data under the message type `previous-user`, to inform the connecting socket `ws` there was a previous `user` connected. The second step is done by sending to the previous `user` the initialization `data` received from the connecting socket `ws`, but updating `data.type` to `new-user`, in order to let `user` know of the connection of `ws`.
 
 ```js
-// Callback function that get's executed when a new socket is intialized/connects
-function handleWs(ws){
-    console.log('New user connected: ' + ws)
-    // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
-    ws.send(JSON.stringify({type: 'user-init', id: users.length}))
-    users.push({socket: ws, id: users.length})
-
-    // This callback is triggered everytime a new message is received
-    function messageReceived(m){ 
-        // Parse de data to json
-        const data = JSON.parse(m)
-        // Data setup means a new user received their id and sends back all the initialization parameters
-        if(data.type == 'user-setup') {
-            // Broadcast user setup message called new-user to setup new user in all users except from the originary
-            users.forEach((user) => {
-                // If the user correpsonds to the one on setup, store its initialization data
-                if(user.socket == ws) {
-                    user.color = data.color
-                    user.matrix = data.matrix
-                }
-                // If there are users different to the one setting up, it means there were users previously connected. Hence, we have to let the new user know of their existance.
-                else {
-                    // Send to the new user the previous users data
-                    ws.send(JSON.stringify({type: 'previous-user', id: user.id, color: user.color, matrix: user.matrix}))
-                    // Send to other users the new user setup
-                    data.type = 'new-user'
-                    user.socket.send(JSON.stringify(data))
-                }
-            })
-        }
+// This callback is triggered everytime a new message is received
+function messageReceived(m){ 
+    // Parse de data to json
+    const data = JSON.parse(m)
+    // Data setup means a new user received their id and sends back all the initialization parameters
+    if(data.type == 'user-setup') {
+        // Broadcast user setup message called new-user to setup new user in all users except from the originary
+        users.forEach((user) => {
+            // If the user correpsonds to the one on setup, store its initialization data
+            if(user.socket == ws) {
+                user.color = data.color
+                user.matrix = data.matrix
+            }
+            // If there are users different to the one setting up, it means there were users previously connected. Hence, we have to let the new user know of their existance.
+            else {
+                // Send to the new user the previous users data
+                ws.send(JSON.stringify({type: 'previous-user', id: user.id, color: user.color, matrix: user.matrix}))
+                // Send to other users the new user setup
+                data.type = 'new-user'
+                user.socket.send(JSON.stringify(data))
+            }
+        })
     }
-    // Attach callbacks to the socket as soon it gets connected
-    ws.on('message', messageReceived)
-    ws.on('close', endUser)
 }
+```
+
+```js
+else if(data.type === 'new-user' || data.type === 'previous-user') {
+        console.log(data.type)
+        // Instantiate the cube and store it in the users array
+        users.push({mesh: newCube(false, new THREE.Color().setHex(data.color), new THREE.Matrix4().fromArray(data.matrix)), id: data.id})
+        // Add the cube to the scene so it can be rendered
+        scene.add(users[users.length - 1].mesh)
+        console.log(users[users.length - 1].mesh)
+    }
 ```
 
 ```js
