@@ -256,69 +256,13 @@ else if(data.type === 'new-user' || data.type === 'previous-user') {
 }
 ```
 
-```js
-// Callback function that get's executed when a new socket is intialized/connects
-function handleWs(ws){
-    console.log('New user connected: ' + ws)
-    // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
-    ws.send(JSON.stringify({type: 'user-init', id: users.length}))
-    users.push({socket: ws, id: users.length})
-
-    // When a user disconnects, remove it from the users array and inform all the clients in the network
-    function endUser() {
-        const index = users.findIndex(user => user.socket == ws)
-        users.forEach((user) => {
-            if(user.socket != ws) {
-                // Let know all users that aren't the one disconnecting from the disconnection
-                user.socket.send(JSON.stringify({type: 'user-disconnect', id: users[index].id}))
-            }
-        })
-        console.log('user id: ' + users[index].id + ' disconnected')
-        users.splice(index, 1)
-    }
-    // This callback is triggered everytime a new message is received
-    function messageReceived(m){ 
-        // Parse de data to json
-        const data = JSON.parse(m)
-        // Data setup means a new user received their id and sends back all the initialization parameters
-        if(data.type == 'user-setup') {
-            // Broadcast user setup message called new-user to setup new user in all users except from the originary
-            users.forEach((user) => {
-                // If the user correpsonds to the one on setup, store its initialization data
-                if(user.socket == ws) {
-                    user.color = data.color
-                    user.matrix = data.matrix
-                }
-                // If there are users different to the one setting up, it means there were users previously connected. Hence, we have to let the new user know of their existance.
-                else {
-                    // Send to the new user the previous users data
-                    ws.send(JSON.stringify({type: 'previous-user', id: user.id, color: user.color, matrix: user.matrix}))
-                    // Send to other users the new user setup
-                    data.type = 'new-user'
-                    user.socket.send(JSON.stringify(data))
-                }
-            })
-        }
-        else if(data.type == 'user-update') {
-            // When a user udpates its position, let all other users about it.
-            users.forEach((user) => {
-                if(user.socket != ws) {
-                    user.socket.send(JSON.stringify({type: 'user-move', matrix: data.matrix, id: data.id}))
-                }
-            })
-        }
-    }
-    // Attach callbacks to the socket as soon it gets connected
-    ws.on('message', messageReceived)
-    ws.on('close', endUser)
-}
-```
+### Moving the cube
 
 <p align="center">
   <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
 </p>
 
-## Code
+#### Client
 ```js
 function updateCubeTransform() {
     
@@ -337,23 +281,10 @@ function updateCubeTransform() {
 // Web socket incoming messages handler callback
 function readIncomingMessage(e){ 
     // Parse the indoming data into a json object
-    const data = JSON.parse(e.data) 
-    // User init means the server has responded to the connection with the id it assigned to the user
-    if(data.type === 'user-init') {
-        thisCube.id = data.id
-        console.log(thisCube)
-        // Send to the server the initial attributes of the local cube
-        sendMessage(JSON.stringify({type: 'user-setup', matrix: thisCube.mesh.matrix.elements, color: thisCube.mesh.material.color.getHex(), id: thisCube.id}))
-    }
-    // New user or previous user means a user has connected or there were users in the scene before the client connected.
-    else if(data.type === 'new-user' || data.type === 'previous-user') {
-        console.log(data.type)
-        // Instantiate the cube and store it in the users array
-        users.push({mesh: newCube(false, new THREE.Color().setHex(data.color), new THREE.Matrix4().fromArray(data.matrix)), id: data.id})
-        // Add the cube to the scene so it can be rendered
-        scene.add(users[users.length - 1].mesh)
-        console.log(users[users.length - 1].mesh)
-    }
+    const data = JSON.parse(e.data)
+    .
+    .
+    .
     // User move indicates a user in the network has updated their transformation matrix
     else if(data.type == 'user-move') {
         // Find the user that moved in the users array
@@ -362,21 +293,28 @@ function readIncomingMessage(e){
         // Update the cube's matrix with the data received from the server. Note the data was sent as an array.
         users[index].mesh.matrix.fromArray(data.matrix)
     }
-    // Delete the user that disconnected from the users array
-    else if(data.type == 'user-disconnect') {
-        const index = users.findIndex(user => user.id == data.id)
-        console.log('user ' + users[index].id + ' disconnected')
-        // Remove the cube from the scene
-        scene.remove(users[index].mesh)
-        // Remove the user form users
-        users.splice(index, 1)
-    }
 }
+```
 
-function sendMessage(data){
-    if(socket.readyState === WebSocket.OPEN){
-        socket.send(data)
+#### Server
+
+```js
+// This callback is triggered everytime a new message is received
+function messageReceived(m){ 
+    // Parse de data to json
+    const data = JSON.parse(m)
+    .
+    .
+    .
+    else if(data.type == 'user-update') {
+        // When a user udpates its position, let all other users about it.
+        users.forEach((user) => {
+            if(user.socket != ws) {
+                user.socket.send(JSON.stringify({type: 'user-move', matrix: data.matrix, id: data.id}))
+            }
+        })
     }
 }
 ```
 
+### User Disconnection
