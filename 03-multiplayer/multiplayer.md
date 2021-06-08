@@ -178,14 +178,14 @@ Once a new socket connects we need to inform the client which ID it is assigned 
 ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 ```
 
-### Initializing the user's ID
+### Initializing the user
 The following diagram describes the process of initializing a new cube. We already learned how an ID is assigned to a new socket and how the respective client is informed of that.
 
 <p align="center">
   <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
 </p>
 
-Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres (ID, initialization matrix and color). To do that, we firstly have to declare the callback `readIncomingMessage` which is attached to the socket's `message` event. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
+Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres (ID, initialization matrix and color). To do that, we firstly have to declare the callback `readIncomingMessage` which is attached to the socket's `message` event. The first thing to be done when a message is received is to parse the data. If the received message type is `user-init`, we can respond to the server with `thisCube`'s attributes `matrix` and `color`, labeling the message as `user-setup`.
 
 ```js
 // Web socket incoming messages handler callback
@@ -202,7 +202,14 @@ function readIncomingMessage(e){
 }
 ```
 
-Once the user setup data is received by the server, it has to be stored 
+When a new user is setup and its intialization data received by the server, we need to both store that data on the server's users array and to inform the rest of clients that a new user connected, so each user can locally include the new user on their records. To do that, every time a message `user-setup` is received, we need to iterate over the elements of the whole `users` array and check whether each of them corresponds to the sender socket or not. If an element of the array corresponds to the socket –which we test by comparing `user.socket == ws`– we just assign
+
+```js
+user.color = data.color
+user.matrix = data.matrix
+```
+
+If the current socket is not equals to the sender socket, we have to do two things: telling the new socket that there were previous users connected, and inform the previous users of the new user being connected.
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
