@@ -219,6 +219,44 @@ function handleWs(ws){
     ws.send(JSON.stringify({type: 'user-init', id: users.length}))
     users.push({socket: ws, id: users.length})
 
+    // This callback is triggered everytime a new message is received
+    function messageReceived(m){ 
+        // Parse de data to json
+        const data = JSON.parse(m)
+        // Data setup means a new user received their id and sends back all the initialization parameters
+        if(data.type == 'user-setup') {
+            // Broadcast user setup message called new-user to setup new user in all users except from the originary
+            users.forEach((user) => {
+                // If the user correpsonds to the one on setup, store its initialization data
+                if(user.socket == ws) {
+                    user.color = data.color
+                    user.matrix = data.matrix
+                }
+                // If there are users different to the one setting up, it means there were users previously connected. Hence, we have to let the new user know of their existance.
+                else {
+                    // Send to the new user the previous users data
+                    ws.send(JSON.stringify({type: 'previous-user', id: user.id, color: user.color, matrix: user.matrix}))
+                    // Send to other users the new user setup
+                    data.type = 'new-user'
+                    user.socket.send(JSON.stringify(data))
+                }
+            })
+        }
+    }
+    // Attach callbacks to the socket as soon it gets connected
+    ws.on('message', messageReceived)
+    ws.on('close', endUser)
+}
+```
+
+```js
+// Callback function that get's executed when a new socket is intialized/connects
+function handleWs(ws){
+    console.log('New user connected: ' + ws)
+    // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
+    ws.send(JSON.stringify({type: 'user-init', id: users.length}))
+    users.push({socket: ws, id: users.length})
+
     // When a user disconnects, remove it from the users array and inform all the clients in the network
     function endUser() {
         const index = users.findIndex(user => user.socket == ws)
