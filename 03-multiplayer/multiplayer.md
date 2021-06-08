@@ -214,7 +214,7 @@ users.forEach((user) => {
 })
 ```
 
-If the current socket (`user`) of the array is not equals to the connecting socket (`ws`), we have to do two things: telling `ws` that there was a previous `user` connected to the system, and inform the previous `user` of `ws` being connected.
+If the current socket (`user`) of the array is not equals to the connecting socket (`ws`), we have to do two things: telling `ws` that there was a previous `user` connected to the system, and inform the previous `user` of `ws` being connected. We do the first thing by calling `ws.send()` and sending the `user`'s initialization data under the message type `previous-user`, to inform the connecting socket `ws` there was a previous `user` connected. The second step is done by sending the previous `user` the initialization `data` received from the connecting socket `ws`, but updating `data.type` to `new-user`, in order to let `user` know of the connection of `ws`.
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
