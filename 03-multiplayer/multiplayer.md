@@ -144,7 +144,7 @@ scene.add(thisCube.mesh)
 Every time a new player connects to the server, a series of concatenated messages must be sent between client and server in order to initialize the player all over the network. In this section we will break down that process and write the code.
 
 ### Initializing a new WebSocket on the server
-Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an income message is received, and `'close'` that is fired when the socket desconnects. Let's setup the event listeners by calling the function `ws.on()`, that takes an event and a callback. In this case we will declare the callbacks later.
+Whenever a new user connects, the WS connection gets initialized and the handler function `handleWs(ws)` –declared as a callback for the socket init command in the server– gets executed on the server side. This function is called only once –when the socket is opened– and inside it we can setup the listeners to WS's possible events: `'message'` which is triggered when an incoming message is received, and `'close'` that is fired when the socket desconnects. Let's setup the event listeners by calling the function `ws.on()`, that takes an event and a callback. In this case we will declare the callbacks later.
 
 ```js
 // Callback function that get's executed when a new socket is intialized/connects
@@ -155,7 +155,7 @@ function handleWs(ws){
 }
 ```
 
-The WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each client, we must manually assign one. The easiest way to do that is having an array of users in the server side and push the new socket to it. In this way, the length of the array corresponds to the ID of the following socket that connects, data we push to the `users` array.
+The WS standard doesn't natively assign an ID to each socket, but since we need to keep track of which socket corresponds to each user, we must manually assign one. The easiest way to do that is having an array of users on the server side and push the new socket to it. In this way, the current length of the array corresponds to the ID of the following socket that connects, data we push to the `users` array.
 
 ```js
 let users = []
@@ -171,7 +171,7 @@ function handleWs(ws){
 }
 ```
 
-Once a new socket connects we need to inform the player which ID it is assigned with, which we send with the function `ws.send()` that expects the message to be formatted as a string. Now, since WS only takes one type of messages we will face the need of labeling each message to let the the receiver know what type of information it is receiving. To do that, each message will be formatted as an object with a `type` and the devilered content, in this case `user-init`. But since WS doesn't support objects natively, we will have to format each message by calling the JS native function `JSON.stringify(message)`.
+Once a new socket connects we need to inform the client which ID it is assigned with, piece of information which I sent by the function `ws.send()`, that expects the message to be formatted as a string. Now, since WS only takes one type of messages we will face the need of labeling each message to let the the receiver know what type of information it is receiving. To do that, each message will be formatted as an object with a `type` and the delivered content, in this case `user-init`. But since WS doesn't support objects natively, we will have to format each message by calling the JS native function `JSON.stringify(message)`.
 
 ```js
 // As soon as a new client connects, assign them an id, store it in the users array and send it back to the client
@@ -179,6 +179,11 @@ ws.send(JSON.stringify({type: 'user-init', id: users.length}))
 ```
 
 ### Initializing the user's ID
+
+<p align="center">
+  <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
+</p>
+
 Once the ID has been assigned on the server side and sent to the client, we need to catch that incoming message and inform the server back of the cube's initialization paramteres. To do that, we firstly have to declare the callback `readIncomingMessage` we invoked when the client started a new WS connection. The first thing to be done when a message is received is to parse the data. After that, we can check what message type is received.
 
 ```js
@@ -195,10 +200,6 @@ function readIncomingMessage(e){
     }
 }
 ```
-
-<p align="center">
-  <img src="./assets/user-setup-interaction.jpg" align="middle" width="80%">
-</p>
 
 Once the user setup data is received by the server, it has to be stored 
 
