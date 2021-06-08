@@ -202,11 +202,16 @@ function readIncomingMessage(e){
 }
 ```
 
-When a new user is setup and its intialization data received by the server, we need to both store that data on the server's users array and to inform the rest of clients that a new user connected, so each user can locally include the new user on their records. To do that, every time a message `user-setup` is received, we need to iterate over the elements of the whole `users` array and check whether each of them corresponds to the sender socket or not. If an element of the array corresponds to the socket –which we test by comparing `user.socket == ws`– we just assign
+When a new user is setup and its intialization data received by the server, we need to both store that data on the server's users array and to inform the rest of clients that a new user connected, so each user can locally include the new user on their records. To do that, every time a message `user-setup` is received, we need to iterate over the elements of the `users` array (each of them called `user`) and check whether each of them corresponds to the connecting socket (`ws`) or not. If an element of the array corresponds to the socket –which we test by comparing `user.socket == ws`– we just assign
 
 ```js
-user.color = data.color
-user.matrix = data.matrix
+users.forEach((user) => {
+    // If the user correpsonds to the one on setup, store its initialization data
+    if(user.socket == ws) {
+        user.color = data.color
+        user.matrix = data.matrix
+    }
+})
 ```
 
 If the current socket is not equals to the sender socket, we have to do two things: telling the new socket that there were previous users connected, and inform the previous users of the new user being connected.
