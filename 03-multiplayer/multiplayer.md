@@ -243,15 +243,17 @@ function messageReceived(m){
 }
 ```
 
+On the client side, receiving a `new-user` or `previous-user` message implies a different user has to be instantiated on the system. In this cases, we need to instantiate a new cube by calling the function `newCube()` that takes a boolean flag that indicates if the new cube is the local user's cube or another user's, a `THREE.Color` object, and an initial `THREE.Matrix4`. The function returns a mesh which is pushed to the local `users` array together with an ID. Then, the new cube has to be added to the `THREE.Scene` in order to be rendered by the camera.
+
 ```js
 else if(data.type === 'new-user' || data.type === 'previous-user') {
-        console.log(data.type)
-        // Instantiate the cube and store it in the users array
-        users.push({mesh: newCube(false, new THREE.Color().setHex(data.color), new THREE.Matrix4().fromArray(data.matrix)), id: data.id})
-        // Add the cube to the scene so it can be rendered
-        scene.add(users[users.length - 1].mesh)
-        console.log(users[users.length - 1].mesh)
-    }
+    console.log(data.type)
+    // Instantiate the cube and store it in the users array
+    users.push({mesh: newCube(false, new THREE.Color().setHex(data.color), new THREE.Matrix4().fromArray(data.matrix)), id: data.id})
+    // Add the cube to the scene so it can be rendered
+    scene.add(users[users.length - 1].mesh)
+    console.log(users[users.length - 1].mesh)
+}
 ```
 
 ```js
