@@ -324,20 +324,8 @@ function readIncomingMessage(e){
 ```
 
 ### User Disconnection
+Finally, whenever a user disconnects from the networks, either for connection troubles or due to quitting the game, the server needs to inform all connected users of that event. To do that, as soon as the `ws.on('close', endUser)` and the `endUser()` event handler is called, we need to iterate over the `users` array and send a message labeled as `user-disconnect` with the ID of the disconnected user.
 
-#### User
-```js
-// Delete the user that disconnected from the users array
-else if(data.type == 'user-disconnect') {
-    const index = users.findIndex(user => user.id == data.id)
-    console.log('user ' + users[index].id + ' disconnected')
-    // Remove the cube from the scene
-    scene.remove(users[index].mesh)
-    // Remove the user form users
-    users.splice(index, 1)
-}
-```
-#### Server
 ```js
 // When a user disconnects, remove it from the users array and inform all the clients in the network
 function endUser() {
@@ -352,3 +340,18 @@ function endUser() {
     users.splice(index, 1)
 }
 ```
+
+Whenever a user receives this message, the client has to find the cube corresponding to the received ID in the `users` array and remove that element from the three.js `scene` and from the array.
+
+```js
+// Delete the user that disconnected from the users array
+else if(data.type == 'user-disconnect') {
+    const index = users.findIndex(user => user.id == data.id)
+    console.log('user ' + users[index].id + ' disconnected')
+    // Remove the cube from the scene
+    scene.remove(users[index].mesh)
+    // Remove the user form users
+    users.splice(index, 1)
+}
+```
+
