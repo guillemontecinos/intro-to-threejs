@@ -257,7 +257,7 @@ else if(data.type === 'new-user' || data.type === 'previous-user') {
 ```
 
 ### Moving the cube
-As you can remember from [Tutorial 02](../02-matrices-and-interaction/02-matrices-and-interaction.md), the cube position is updated according to the user inputs inside a function called `updateCubeTransform()`. Anytime a user moves their cube, besides updating the element's position int he 3D scene it has to be updated accros the entire system. 
+As you can remember from [Tutorial 02](../02-matrices-and-interaction/02-matrices-and-interaction.md), the cube position is updated according to the user inputs inside a function called `updateCubeTransform()`. Anytime a user moves their cube, besides updating the element's position int he 3D scene it has to be updated accros the entire system.
 
 <p align="center">
   <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
