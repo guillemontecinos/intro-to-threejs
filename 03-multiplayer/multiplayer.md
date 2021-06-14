@@ -257,12 +257,14 @@ else if(data.type === 'new-user' || data.type === 'previous-user') {
 ```
 
 ### Moving the cube
+As you can remember from [Tutorial 02](../02-matrices-and-interaction/02-matrices-and-interaction.md), the cube position is updated according to the user inputs inside a function called `updateCubeTransform()`.
 
 <p align="center">
   <img src="./assets/user-move-interaction.jpg" align="middle" width="90%">
 </p>
 
-#### Client
+Anytime a user moves their cube, besides updating the element's position int he 3D scene it has to be updated accros the entire system. To do that, at the end of the function a message has to be sent to the server under the message type `user-update`, which tells the server a user has moved. This message must include the user's ID and the new cube's matrix.
+
 ```js
 function updateCubeTransform() {
     
@@ -276,27 +278,10 @@ function updateCubeTransform() {
         sendMessage(JSON.stringify({type: 'user-update', matrix: thisCube.mesh.matrix.elements, id: thisCube.id}))
     }
 }
-
-
-// Web socket incoming messages handler callback
-function readIncomingMessage(e){ 
-    // Parse the indoming data into a json object
-    const data = JSON.parse(e.data)
-    .
-    .
-    .
-    // User move indicates a user in the network has updated their transformation matrix
-    else if(data.type == 'user-move') {
-        // Find the user that moved in the users array
-        const index = users.findIndex(user => user.id == data.id)
-        console.log('user ' + users[index].id + ' moved.')
-        // Update the cube's matrix with the data received from the server. Note the data was sent as an array.
-        users[index].mesh.matrix.fromArray(data.matrix)
-    }
-}
 ```
 
-#### Server
+When the message is received by the server it has to spread the new position of the moving cube arround the networks. This can be done by iterating the `users` array within the server and send the new position to all the sockets that are different to the sender, using the message type `user-move`.
+
 
 ```js
 // This callback is triggered everytime a new message is received
@@ -313,6 +298,27 @@ function messageReceived(m){
                 user.socket.send(JSON.stringify({type: 'user-move', matrix: data.matrix, id: data.id}))
             }
         })
+    }
+}
+```
+
+Then, when a user receives a `user-move` message, it has to identify to what user it corresponds in the `users` array, and update its matrix with the function `matrix.fromArray(array)`, that interprets a 16 elements-long array as a 4x4 matrix.
+
+```js
+// Web socket incoming messages handler callback
+function readIncomingMessage(e){ 
+    // Parse the indoming data into a json object
+    const data = JSON.parse(e.data)
+    .
+    .
+    .
+    // User move indicates a user in the network has updated their transformation matrix
+    else if(data.type == 'user-move') {
+        // Find the user that moved in the users array
+        const index = users.findIndex(user => user.id == data.id)
+        console.log('user ' + users[index].id + ' moved.')
+        // Update the cube's matrix with the data received from the server. Note the data was sent as an array.
+        users[index].mesh.matrix.fromArray(data.matrix)
     }
 }
 ```
