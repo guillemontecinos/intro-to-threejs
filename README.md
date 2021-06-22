@@ -3,4 +3,4 @@ A series of introductory tutorials to [three.js](https://threejs.org/) written d
 
 1. [From nothing to importing an .obj model](./01-intro-to-threejs/01-intro-to-threejs.md)
 2. [Matrices and interaction](./02-matrices-and-interaction/02-matrices-and-interaction.md)
-3. Multiplayer (WIP)
+3. [Multiplayer](./03-multiplayer/multiplayer.md)
