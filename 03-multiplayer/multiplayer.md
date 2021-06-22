@@ -3,6 +3,17 @@
 
 This is the third of a series of [*intro to three.js tutorials*](https://github.com/guillemontecinos/intro-to-threejs). In this one we will convert the basic game developed in [02 – Intro to Three.js – Matrices and interaction](../02-matrices-and-interaction/02-matrices-and-interaction.md) into a multiplayer game, by learning how to write a [Node.js](https://nodejs.org/) server using [express.js](https://expressjs.com/) and integrating [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) with three.js. The WebSockets implementation is based on Tome Igoe's [examples](https://tigoe.github.io/websocket-examples/).
 
+## Index
+* [Writing a basic Node.js server](#writing-a-basic-nodejs-server)
+    * [Setting up WebSockets in the express server](#setting-up-websockets-in-the-express-server)
+* [Setting up the client to stablish a WebSockets connection](#setting-up-the-client-to-stablish-a-websockets-connection)
+    * [Wrapping the cube mesh intialization with a function](#wrapping-the-cube-mesh-intialization-with-a-function)
+* [Designing the interaction between client and server](#designing-the-interaction-between-client-and-server)
+    * [Initializing a new WebSocket on the server](#initializing-a-new-websocket-on-the-server)
+    * [Initializing the user](#initializing-the-user)
+    * [Moving the cube](#moving-the-cube)
+    * [User Disconnection](#user-disconnection)
+
 ## Writing a basic Node.js server
 The architecture of the system we need to build consists of a server with which all users stablish a WebSocket connection. Through this connection the clients send information to the server such as initial position, color and position updates. This data is processed by the server and broadcasted over the network to all the clients in real time. For this purpose we will write a Node.js (a JavaScript back-end environment) server that uses express.js to handle HTTP and WebSockets requests and responses.
 
